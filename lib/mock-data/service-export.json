@@ -1,0 +1,1 @@
+{"exports":[{"date":"2026-07-01","order_number":"SRV-2026-08934","vin":"WP0ZZZ99ZTS392147","service_type":"Scheduled Maintenance","labor_hours":2.5,"labor_charge":375,"parts_cost":285,"technician":"Carlos M.","bay_utilization":0.85,"customer_satisfaction":4.8}],"summary_stats":{"service_orders_month":847,"average_order_value":682,"technician_efficiency":0.82,"csi_score":4.7}}
