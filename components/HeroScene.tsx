@@ -3,6 +3,7 @@
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
+import { useBrand } from "@/lib/theme-config";
 
 const lime = "#cfff04";
 const purple = "#6d4aff";
@@ -29,7 +30,7 @@ function TetrahedronWireframe({ reduced = false }: { reduced?: boolean }) {
   </group>;
 }
 
-function DodecahedronWireframe({ reduced = false }: { reduced?: boolean }) {
+function DodecahedronWireframe({ reduced = false, color }: { reduced?: boolean; color: string }) {
   const mesh = useRef<THREE.Mesh>(null);
   useFrame((state, delta) => {
     if (!mesh.current || reduced) return;
@@ -40,7 +41,7 @@ function DodecahedronWireframe({ reduced = false }: { reduced?: boolean }) {
   });
   return <mesh ref={mesh} rotation={[.2, 0, .25]}>
     <dodecahedronGeometry args={[2.45, 0]} />
-    <meshBasicMaterial color={purple} wireframe transparent opacity={.28} />
+    <meshBasicMaterial color={color} wireframe transparent opacity={.28} />
   </mesh>;
 }
 
@@ -132,13 +133,13 @@ function FloatingCore({ children, reduced }: { children: React.ReactNode; reduce
   return <group ref={group}>{children}</group>;
 }
 
-function TelemetryCore({ mobile, reduced }: { mobile: boolean; reduced: boolean }) {
+function TelemetryCore({ mobile, reduced, brandAccent }: { mobile: boolean; reduced: boolean; brandAccent: string }) {
   return <group position={[mobile ? 0 : 2.8, mobile ? -.7 : 0, 0]} scale={mobile ? .72 : 1}>
     <ambientLight intensity={.38} />
     <pointLight position={[3, 4, 4]} color={lime} intensity={10} distance={12} />
     <pointLight position={[-3, -2, 2]} color={purple} intensity={8} distance={10} />
     <FloatingCore reduced={reduced}>
-      <DodecahedronWireframe reduced={reduced} />
+      <DodecahedronWireframe reduced={reduced} color={brandAccent} />
       <TetrahedronWireframe reduced={reduced} />
       <EdgeParticles count={mobile ? 12 : 30} reduced={reduced} />
       <AmbientSparkles count={mobile ? 18 : 46} />
@@ -152,6 +153,7 @@ function StaticTelemetry() {
 }
 
 export function HeroScene() {
+  const { brand } = useBrand();
   const [ready, setReady] = useState(false);
   const [webgl, setWebgl] = useState(true);
   const [reduced, setReduced] = useState(false);
@@ -160,17 +162,21 @@ export function HeroScene() {
     const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
     const size = window.matchMedia("(max-width: 767px)");
     const sync = () => { setReduced(motion.matches); setMobile(size.matches); };
-    try {
-      const canvas = document.createElement("canvas");
-      setWebgl(Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl")));
-    } catch { setWebgl(false); }
-    sync(); motion.addEventListener("change", sync); size.addEventListener("change", sync); setReady(true);
-    return () => { motion.removeEventListener("change", sync); size.removeEventListener("change", sync); };
+    const frame = requestAnimationFrame(() => {
+      try {
+        const canvas = document.createElement("canvas");
+        setWebgl(Boolean(canvas.getContext("webgl2") || canvas.getContext("webgl")));
+      } catch { setWebgl(false); }
+      sync();
+      setReady(true);
+    });
+    motion.addEventListener("change", sync); size.addEventListener("change", sync);
+    return () => { cancelAnimationFrame(frame); motion.removeEventListener("change", sync); size.removeEventListener("change", sync); };
   }, []);
   return <div className="telemetry-scene">
     <p className="sr-only">Engineered telemetry visualization with nested geometric systems, flowing data particles, live connection nodes, and a perspective data grid.</p>
     {!ready || !webgl || reduced ? <StaticTelemetry /> : <Canvas dpr={[1, 1.6]} camera={{ position: [0, .25, 8.2], fov: 48 }} gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}>
-      <TelemetryCore mobile={mobile} reduced={false} />
+      <TelemetryCore mobile={mobile} reduced={false} brandAccent={brand.accent} />
     </Canvas>}
     <div className="telemetry-hud" aria-hidden="true">
       <div className="hud-top"><span>COHERENCE <b>0.94</b> ✓</span><span>LATENCY <b>23ms</b></span><span>EXPORTS <b>12/12</b></span></div>

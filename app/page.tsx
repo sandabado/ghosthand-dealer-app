@@ -4,6 +4,8 @@ import Link from "next/link";
 import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Modal } from "@/components/PrototypeUI";
+import { BrandLogo } from "@/components/BrandLogo";
+import { BrandSwitcher } from "@/components/BrandSwitcher";
 
 const HeroScene = dynamic(() => import("@/components/HeroScene").then(module => module.HeroScene), {
   ssr: false,
@@ -19,8 +21,8 @@ export default function Home() {
   const [demo,setDemo]=useState(false);
   return <main className="landing landing-v2">
     <nav className="site-nav">
-      <Link href="/" className="wordmark"><span>GH</span> Ghost Hand Intelligence</Link>
-      <div className="nav-links"><Link href="/dashboard">Dashboard</Link><Link href="/journeys/anomaly-detection">Journeys</Link><Link href="/settings">Integrations</Link><button onClick={()=>setDemo(true)} className="button button-small button-ghost">Request demo <span>↗</span></button></div>
+      <BrandLogo href="/" />
+      <div className="nav-links"><Link href="/dashboard">Dashboard</Link><Link href="/journeys/anomaly-detection">Journeys</Link><Link href="/settings">Integrations</Link><BrandSwitcher compact /><button onClick={()=>setDemo(true)} className="button button-small button-ghost">Request demo <span>↗</span></button></div>
     </nav>
     <section className="hero hero-v2">
       <HeroScene />
@@ -35,7 +37,7 @@ export default function Home() {
     <section className="proof-strip"><span>THE MANUAL WAY</span><b>4.5 hours</b><i/><span>WITH GHOST HAND</span><b>2m 34s</b><span className="time-back">TIME, RETURNED.</span></section>
     <section className="feature-section" id="capabilities"><div className="section-kicker">CHOOSE A STORY TO EXPLORE</div><div className="feature-grid feature-links">{features.map(f=><Link href={f.href} key={f.number}><article><div className="feature-top"><span>{f.number}</span><b>{f.metric}</b></div><div className="feature-viz">{f.bars.map((h,i)=><i key={i} style={{height:`${h}%`}}/>)}</div><h2>{f.title}</h2><p>{f.body}</p><strong>EXPLORE JOURNEY →</strong></article></Link>)}</div></section>
     <section className="landing-close"><div><span>DEMO PATH · 8 MINUTES</span><h2>Discovery to decision,<br/>without leaving the room.</h2></div><Link href="/onboarding/step-1" className="button button-light">Start guided setup <span>→</span></Link></section>
-    <footer><div className="wordmark"><span>GH</span> Ghost Hand Studios</div><p>Private prototype · Sample data only</p></footer>
+    <footer><BrandLogo /><p>Private prototype · Sample data only</p></footer>
     <Modal open={demo} onClose={()=>setDemo(false)} label="Request demo"><div className="modal-kicker">PRIVATE WALKTHROUGH</div><h2>See your dealership’s blind spots.</h2><p>Choose a 30-minute working session. We’ll map the exports you already use and show where Ghost Hand can return time and margin.</p><label className="field">WORK EMAIL<input type="email" placeholder="ken@dealer.com"/></label><label className="field">DEALERSHIP<input placeholder="Porsche Centre"/></label><button className="proto-btn lime" onClick={()=>setDemo(false)}>Request walkthrough →</button></Modal>
   </main>
 }

@@ -16,7 +16,7 @@ export default function Dashboard() {
   const [drawer,setDrawer]=useState(false);
   const [notice,setNotice]=useState("");
   const [resolved,setResolved]=useState<string[]>([]);
-  useEffect(()=>{const sync=()=>setRole(localStorage.getItem("gh-role")||"Dealer Principal");sync();window.addEventListener("gh-role",sync);setResolved(JSON.parse(localStorage.getItem("gh-resolved")||"[]"));return()=>window.removeEventListener("gh-role",sync)},[]);
+  useEffect(()=>{const sync=()=>setRole(localStorage.getItem("gh-role")||"Dealer Principal");queueMicrotask(()=>{sync();setResolved(JSON.parse(localStorage.getItem("gh-resolved")||"[]"))});window.addEventListener("gh-role",sync);return()=>window.removeEventListener("gh-role",sync)},[]);
   const list=useMemo(()=>sourceAnomalies.filter(a=>(filter==="all"||a.department===filter)&&(`${a.title} ${a.department}`.toLowerCase().includes(search.toLowerCase()))).sort((a,b)=>sort==="department"?a.department.localeCompare(b.department):b.deviation-a.deviation),[filter,search,sort]);
   const metrics=roleMetrics[role]||roleMetrics["Dealer Principal"];
   function action(status:string){if(selected&&status==="resolved"){const next=[...resolved,selected.id];setResolved(next);localStorage.setItem("gh-resolved",JSON.stringify(next))}setNotice(`${selected?.id} marked ${status}.`);setSelected(null);setTimeout(()=>setNotice(""),2400)}
