@@ -28,7 +28,7 @@ export default function Home() {
       </div>
       <div className="motion-chart" aria-label="Animated gross profit intelligence chart">
         <div className="signal-top"><span>GROSS PROFIT SIGNAL · 6 MONTHS</span><span className="pulse">● LIVE</span></div>
-        <svg viewBox="0 0 580 360" role="img">
+        <svg viewBox="0 0 580 360" preserveAspectRatio="none" role="img">
           <defs><linearGradient id="heroFill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor="#d9ff43" stopOpacity=".3"/><stop offset="1" stopColor="#d9ff43" stopOpacity="0"/></linearGradient><filter id="glow"><feGaussianBlur stdDeviation="7" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs>
           {[60,120,180,240,300].map(y=><line key={y} x1="20" x2="560" y1={y} y2={y} className="gridline"/>)}{[100,190,280,370,460,550].map(x=><line key={x} x1={x} x2={x} y1="35" y2="330" className="gridline vertical"/>)}
           <path className="hero-area" d="M25 320 C95 310 110 285 155 292 S220 294 245 270 S300 249 335 225 S398 205 425 180 S495 135 535 85 L535 330 L25 330Z"/>
