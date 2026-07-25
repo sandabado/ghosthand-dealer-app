@@ -1,0 +1,21 @@
+"use client";
+
+import { useParams } from "next/navigation";
+import { useState } from "react";
+import { PrototypeShell } from "@/components/PrototypeShell";
+import { Modal, Toast, downloadText } from "@/components/PrototypeUI";
+
+const data={
+  sales:{title:"Sales performance",desc:"Turn deal, advisor, model, and F&I exports into a single commercial view.",kpis:[["Units sold","28","+3 MoM"],["Avg gross / unit","$16,850","+$1,200"],["F&I penetration","68%","+5 pts"],["Close rate","27.4%","+2.1 pts"]],rows:[["Michael R.","911 Carrera S","$19,800","Lease","Closed"],["James K.","Cayenne GTS","$18,200","Finance","Closed"],["Priya S.","718 Cayman","$16,900","Cash","Closed"],["Sarah L.","Taycan Turbo S","$14,200","Finance","Review"]]},
+  service:{title:"Service operations",desc:"See throughput, capacity, customer satisfaction, and at-risk work before the day is lost.",kpis:[["Repair orders","847","+6.2%"],["Avg RO value","$682","+$48"],["Technician efficiency","86.2%","+4.2%"],["Bay utilization","82%","target 88%"]],rows:[["Carlos M.","Scheduled maintenance","2.5 hrs","$660","Complete"],["Devin T.","Warranty diagnosis","4.1 hrs","$1,140","In progress"],["Anna P.","Brake service","3.2 hrs","$1,284","Waiting parts"],["Luis G.","Alignment","1.4 hrs","$420","Complete"]]},
+  parts:{title:"Parts intelligence",desc:"Balance availability, margin, aging, and demand signals across every service commitment.",kpis:[["Fill rate","94%","+1.8 pts"],["Inventory turns","4.2","+0.3"],["Backorders","30","+147%"],["Aging exposure","$31,200","143 units"]],rows:[["991-642-101-00","Front brake pad set","12 sold","40.7%","Reorder"],["9Y0-698-451","Cayenne rotor","8 sold","38.2%","Healthy"],["PAD-971-TAY","Taycan charge port","3 sold","32.4%","Backorder"],["MAC-INT-042","Macan cabin filter","27 sold","44.1%","Healthy"]]},
+};
+export default function Department(){
+  const params=useParams<{department:string}>();const key=(params.department in data?params.department:"sales") as keyof typeof data;const d=data[key];const [selected,setSelected]=useState<string[]|null>(null);const [notice,setNotice]=useState("");
+  return <PrototypeShell eyebrow={`${key.toUpperCase()} · DEPARTMENT VIEW`} title={d.title} description={d.desc} actions={<button className="proto-btn dark" onClick={()=>{downloadText(`ghost-hand-${key}.csv`,d.rows.map(r=>r.join(",")).join("\n"),"text/csv");setNotice("Department export downloaded.")}}>Export department ↓</button>}>
+    <Toast message={notice}/><div className="proto-kpis">{d.kpis.map(k=><article key={k[0]}><span>{k[0]}</span><b>{k[1]}</b><small>{k[2]}</small></article>)}</div>
+    <div className="department-detail-grid"><article className="proto-panel"><div className="proto-panel-head"><div><span>30-DAY PERFORMANCE</span><h2>{key==="sales"?"Gross contribution":key==="service"?"Repair-order throughput":"Demand velocity"}</h2></div><b>+12.4%</b></div><div className="dept-trend">{[35,42,38,51,47,61,58,72,68,83,78,94].map((h,i)=><i key={i} style={{height:`${h}%`}}/>)}</div></article><article className="proto-panel dept-opportunity"><span>GHOST HAND OPPORTUNITY</span><h2>{key==="sales"?"Recover $15.9K in advisor variance.":key==="service"?"Open $18.4K in underused bay capacity.":"Protect 11 repair orders from backorder delay."}</h2><p>Click any operating record below to see how Ghost Hand turns a departmental number into a specific next action.</p></article></div>
+    <article className="proto-panel dept-records"><div className="proto-panel-head"><div><span>OPERATING RECORDS</span><h2>Recent activity</h2></div></div>{d.rows.map((r,i)=><button key={r[0]} onClick={()=>setSelected(r)}><span>0{i+1}</span>{r.map((x,j)=><b key={j}>{x}</b>)}<em>→</em></button>)}</article>
+    <Modal open={!!selected} onClose={()=>setSelected(null)} label="Department record">{selected&&<><div className="modal-kicker">{key.toUpperCase()} RECORD · LIVE CONTEXT</div><h2>{selected[1]}</h2><p>Ghost Hand connected this record to six surrounding operating signals and found one recommended action.</p><div className="modal-mini-grid">{selected.slice(0,3).map((x,i)=><div key={x}><span>{["OWNER / ID","ACTIVITY","VALUE"][i]}</span><b>{x}</b></div>)}</div><button className="proto-btn lime" onClick={()=>{setSelected(null);setNotice("Action added to Monday brief.")}}>Add recommendation to brief →</button></>}</Modal>
+  </PrototypeShell>
+}

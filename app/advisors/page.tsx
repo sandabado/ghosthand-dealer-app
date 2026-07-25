@@ -1,0 +1,11 @@
+"use client";
+
+import { useState } from "react";
+import { PrototypeShell } from "@/components/PrototypeShell";
+import { Modal, Toast } from "@/components/PrototypeUI";
+const team=[["Michael R.","$19.8K","7","74%","+17.5%"],["James K.","$18.2K","6","69%","+8.0%"],["Priya S.","$16.9K","5","71%","+0.3%"],["Sarah L.","$14.2K","6","58%","−15.7%"]];
+export default function Advisors(){const [person,setPerson]=useState<string[]|null>(null),[notice,setNotice]=useState("");return <PrototypeShell eyebrow="SALES TEAM · PERFORMANCE" title="Advisor intelligence." description="Coach with context—deal mix, product penetration, follow-up quality, and the gap to benchmark.">
+  <Toast message={notice}/><div className="proto-kpis"><article><span>TEAM AVG GROSS</span><b>$16,850</b><small>+$1,200 MoM</small></article><article><span>TOP QUARTILE</span><b>$19,800</b><small>Michael R.</small></article><article><span>FOLLOW-UPS DUE</span><b>38</b><small>12 high priority</small></article><article><span>COACHING OPPORTUNITY</span><b>$15.9K</b><small>recoverable variance</small></article></div>
+  <article className="proto-panel advisor-deep"><div className="proto-panel-head"><div><span>TEAM BENCHMARK</span><h2>Average gross per unit</h2></div><b>$16,850</b></div>{team.map((a,i)=><button key={a[0]} onClick={()=>setPerson(a)}><span>0{i+1}</span><b>{a[0]}<small>{a[2]} units sold · {a[3]} product penetration</small></b><i><em style={{width:`${parseFloat(a[1].replace("$",""))/20*100}%`}}/></i><strong>{a[1]}</strong><em className={a[4].includes("−")?"down":""}>{a[4]}</em><span>→</span></button>)}</article>
+  <Modal open={!!person} onClose={()=>setPerson(null)} label="Advisor detail">{person&&<><div className="modal-kicker">ADVISOR PERFORMANCE</div><h2>{person[0]}</h2><p>{person[4].includes("−")?"Gross performance is below team benchmark, driven by lower F&I penetration on financed Taycan deals.":"Performance is at or above team benchmark with healthy product penetration."}</p><div className="modal-mini-grid"><div><span>AVG GROSS</span><b>{person[1]}</b></div><div><span>UNITS</span><b>{person[2]}</b></div><div><span>PENETRATION</span><b>{person[3]}</b></div></div><button className="proto-btn lime" onClick={()=>{setPerson(null);setNotice("Coaching brief added to Sarah’s plan.")}}>Create coaching brief →</button></>}</Modal>
+  </PrototypeShell>}

@@ -9,9 +9,19 @@ export default function UploadPage() {
   const router = useRouter();
   const [files, setFiles] = useState<string[]>([]);
   const [dragging, setDragging] = useState(false);
+  const [processing, setProcessing] = useState(false);
+  const [progress, setProgress] = useState(0);
   function receive(list: FileList | null) {
     if (!list) return;
     setFiles(Array.from(list).map(f => f.name));
+  }
+  function processFiles() {
+    setProcessing(true); setProgress(12);
+    const timer = window.setInterval(() => setProgress(value => {
+      const next = Math.min(value + 18, 100);
+      if (next === 100) { window.clearInterval(timer); window.setTimeout(() => router.push("/dashboard"), 350); }
+      return next;
+    }), 220);
   }
   return <main className="upload-page">
     <nav className="site-nav"><Link href="/" className="wordmark"><span>GH</span> Ghost Hand Studios</Link><Link href="/" className="text-link">← Back to overview</Link></nav>
@@ -23,7 +33,7 @@ export default function UploadPage() {
         <input ref={input} type="file" multiple accept=".csv,.xlsx,.xls" onChange={e=>receive(e.target.files)} />
         <span>⇧</span><b>Drop DMS exports here</b><small>or click to browse · CSV, XLS, XLSX</small>
       </button>
-      {files.length > 0 && <div className="file-list">{files.map(f=><span key={f}>✓ {f}</span>)}<button className="button button-light" onClick={()=>router.push("/dashboard")}>Process {files.length} file{files.length>1?"s":""} →</button></div>}
+      {files.length > 0 && <div className="file-list">{files.map(f=><span key={f}>✓ {f}</span>)}<button className="button button-light" disabled={processing} onClick={processFiles}>{processing?`Mapping exports · ${progress}%`:`Process ${files.length} file${files.length>1?"s":""} →`}</button>{processing&&<i className="upload-progress" style={{width:`${progress}%`}}/>}</div>}
       <div className="sample-cta"><div><span>NO EXPORTS ON HAND?</span><b>See the full experience with realistic Porsche dealer data.</b></div><Link href="/demo" className="button button-dark">Load demo data →</Link></div>
       <div className="trust-row"><span>◇ Browser-only prototype</span><span>◇ No files are stored</span><span>◇ Sample data available</span></div>
     </section>
