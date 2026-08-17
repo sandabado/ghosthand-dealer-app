@@ -16,7 +16,7 @@ export type BrandTheme = {
   demo: boolean;
 };
 
-export const DEFAULT_BRAND: BrandKey = "ghost-hand";
+export const DEFAULT_BRAND: BrandKey = "porsche";
 export const BRAND_STORAGE_KEY = "gh-brand";
 export const BRAND_EVENT = "gh-brand-change";
 export const DEMO_BRAND_TOOLTIP = "This is a demonstration preset. Your organization uses Ghost Hand Intelligence.";

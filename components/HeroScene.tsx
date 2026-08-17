@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import * as THREE from "three";
 import { useBrand } from "@/lib/theme-config";
 
-const lime = "#cfff04";
+const accent = "#ffd500";
 const purple = "#6d4aff";
 
 function TetrahedronWireframe({ reduced = false }: { reduced?: boolean }) {
@@ -24,7 +24,7 @@ function TetrahedronWireframe({ reduced = false }: { reduced?: boolean }) {
   return <group>
     <mesh ref={mesh}>
       <tetrahedronGeometry args={[1.55, 0]} />
-      <meshStandardMaterial color={lime} wireframe emissive={lime} emissiveIntensity={1.8} transparent opacity={0.82} />
+      <meshStandardMaterial color={accent} wireframe emissive={accent} emissiveIntensity={1.8} transparent opacity={0.82} />
     </mesh>
     {vertices.map((position, index) => <GlowNode key={index} position={position} delay={index * .45} reduced={reduced} />)}
   </group>;
@@ -54,7 +54,7 @@ function GlowNode({ position, delay, reduced }: { position: [number, number, num
   });
   return <mesh ref={node} position={position}>
     <sphereGeometry args={[.095, 14, 14]} />
-    <meshStandardMaterial color="#ffffff" emissive={lime} emissiveIntensity={4} />
+    <meshStandardMaterial color="#ffffff" emissive={accent} emissiveIntensity={4} />
   </mesh>;
 }
 
@@ -84,7 +84,7 @@ function EdgeParticles({ count = 30, reduced = false }: { count?: number; reduce
     <bufferGeometry>
       <bufferAttribute attach="attributes-position" args={[positionArray, 3]} />
     </bufferGeometry>
-    <pointsMaterial color={lime} size={.075} sizeAttenuation transparent opacity={.95} blending={THREE.AdditiveBlending} />
+    <pointsMaterial color={accent} size={.075} sizeAttenuation transparent opacity={.95} blending={THREE.AdditiveBlending} />
   </points>;
 }
 
@@ -96,7 +96,7 @@ function GridFloor({ reduced = false }: { reduced?: boolean }) {
     const material = grid.current.material as THREE.Material;
     material.opacity = .15 + Math.sin(state.clock.elapsedTime * .8) * .035;
   });
-  return <gridHelper ref={grid} args={[20, 30, lime, "#273020"]} position={[0, -2.65, 0]} material-transparent material-opacity={.16} />;
+  return <gridHelper ref={grid} args={[20, 30, accent, "#302818"]} position={[0, -2.65, 0]} material-transparent material-opacity={.16} />;
 }
 
 function AmbientSparkles({ count }: { count: number }) {
@@ -119,7 +119,7 @@ function AmbientSparkles({ count }: { count: number }) {
   });
   return <points ref={cloud}>
     <bufferGeometry><bufferAttribute attach="attributes-position" args={[positions, 3]} /></bufferGeometry>
-    <pointsMaterial color={lime} size={.025} sizeAttenuation transparent opacity={.35} blending={THREE.AdditiveBlending} />
+    <pointsMaterial color={accent} size={.025} sizeAttenuation transparent opacity={.35} blending={THREE.AdditiveBlending} />
   </points>;
 }
 
@@ -136,7 +136,7 @@ function FloatingCore({ children, reduced }: { children: React.ReactNode; reduce
 function TelemetryCore({ mobile, reduced, brandAccent }: { mobile: boolean; reduced: boolean; brandAccent: string }) {
   return <group position={[mobile ? 0 : 2.8, mobile ? -.7 : 0, 0]} scale={mobile ? .72 : 1}>
     <ambientLight intensity={.38} />
-    <pointLight position={[3, 4, 4]} color={lime} intensity={10} distance={12} />
+    <pointLight position={[3, 4, 4]} color={accent} intensity={10} distance={12} />
     <pointLight position={[-3, -2, 2]} color={purple} intensity={8} distance={10} />
     <FloatingCore reduced={reduced}>
       <DodecahedronWireframe reduced={reduced} color={brandAccent} />
