@@ -23,7 +23,8 @@ export default function Onboarding() {
   return (
     <main className="beat-shell" data-beat={beat}>
       <nav className="beat-nav">
-        <Link href="/" className="wordmark"><span>GH</span> Ghost Hand Intelligence</Link>
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- hard load avoids a client-router cache bug on this dynamic route */}
+        <a href="/onboarding/step-1" className="wordmark"><span>GH</span> Ghost Hand Intelligence</a>
         <Link href="/dashboard" className="beat-skip">Skip to demo →</Link>
       </nav>
       {beat === 1 && <Beat1 onNext={() => go(2)} />}

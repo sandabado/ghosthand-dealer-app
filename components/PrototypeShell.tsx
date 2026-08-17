@@ -21,13 +21,16 @@ export function PrototypeShell({children, title, eyebrow, description, actions}:
     ["/dashboard","Overview","⌁"],["/journeys/anomaly-detection","Anomalies","◇"],["/journeys/executive-reporting","Reports","◫"],
     ["/journeys/cross-dept-clarity","Connections","↔"],["/departments/sales","Sales","↗"],["/departments/service","Service","⌘"],
     ["/departments/parts","Parts","▦"],["/advisors","Advisors","◎"],["/upload","Data imports","⇧"],["/settings","Settings","⚙"],
-    ["/onboarding/step-1","Presentation","▶"],
   ];
   return <main className="proto-app">
     <aside className={`proto-sidebar ${mobile?"open":""}`}>
       <BrandLogo href="/" />
       <div className="proto-workspace"><i>PC</i><div><b>Porsche Centre</b><span>Demo workspace</span></div></div>
-      <nav>{links.map(([href,label,icon])=><Link key={href} href={href} className={pathname===href?"active":""} onClick={()=>setMobile(false)}><span>{icon}</span>{label}{label==="Anomalies"&&<b>7</b>}</Link>)}</nav>
+      <nav>
+        {links.map(([href,label,icon])=><Link key={href} href={href} className={pathname===href?"active":""} onClick={()=>setMobile(false)}><span>{icon}</span>{label}{label==="Anomalies"&&<b>7</b>}</Link>)}
+        {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- hard load avoids a client-router cache bug on this dynamic route */}
+        <a href="/onboarding/step-1" className={pathname.startsWith("/onboarding")?"active":""} onClick={()=>setMobile(false)}><span>▶</span>Presentation</a>
+      </nav>
       <div className="sidebar-brand-switch"><BrandSwitcher /></div>
       <div className="role-switch"><span>CURRENT VIEW</span><select aria-label="Current role view" value={role} onChange={e=>updateRole(e.target.value)}>{roles.map(r=><option key={r}>{r}</option>)}</select></div>
       <Link href="/guardian" className="sidebar-guardian" onClick={()=>setMobile(false)}><GuardianBadge compact /></Link>
