@@ -1,16 +1,13 @@
 "use client";
 
 import Link from "next/link";
-import dynamic from "next/dynamic";
 import { useState } from "react";
 import { Modal } from "@/components/PrototypeUI";
 import { BrandLogo } from "@/components/BrandLogo";
 import { BrandSwitcher } from "@/components/BrandSwitcher";
-
-const HeroScene = dynamic(() => import("@/components/HeroScene").then(module => module.HeroScene), {
-  ssr: false,
-  loading: () => <div className="telemetry-scene"><div className="telemetry-static" aria-hidden="true"><i/><i/><i/><span/><span/><span/><span/></div></div>,
-});
+import { SpeedHero } from "@/components/SpeedHero";
+import { StatsBar } from "@/components/StatsBar";
+import { useCountUp } from "@/hooks/useCountUp";
 
 const features = [
   { number:"01", title:"Cross-department clarity", body:"Sales, service, and parts exports become one connected operating picture.", metric:"34% more cross-sell", href:"/journeys/cross-dept-clarity", bars:[42,70,55,88] },
@@ -19,21 +16,25 @@ const features = [
 ];
 export default function Home() {
   const [demo,setDemo]=useState(false);
+  const exportsRef = useCountUp(12, 1700, 1300);
+  const anomaliesRef = useCountUp(7, 1700, 1500);
   return <main className="landing landing-v2">
     <nav className="site-nav">
       <BrandLogo href="/" />
-      <div className="nav-links"><Link href="/dashboard">Dashboard</Link><Link href="/journeys/anomaly-detection">Journeys</Link><Link href="/settings">Integrations</Link><BrandSwitcher compact /><button onClick={()=>setDemo(true)} className="button button-small button-ghost">Request demo <span>↗</span></button></div>
+      <div className="nav-links"><Link href="/dashboard">Dashboard</Link><Link href="/journeys/anomaly-detection">Journeys</Link><Link href="/settings">Integrations</Link><Link href="/onboarding/step-1">Presentation</Link><BrandSwitcher compact /><button onClick={()=>setDemo(true)} className="button button-small button-ghost">Request demo <span>↗</span></button></div>
     </nav>
     <section className="hero hero-v2">
-      <HeroScene />
+      <SpeedHero />
       <div className="hero-copy">
         <div className="eyebrow"><i/>GHOST HAND INTELLIGENCE · TELEMETRY ACTIVE</div>
-        <h1>See what<br/>your DMS is<br/><em>not telling you.</em></h1>
+        <h1><span className="line-1">See what</span><br/><span className="line-2">your DMS is</span><br/><em><span className="line-3">not telling you.</span></em></h1>
         <p>Ghost Hand connects the exports your teams already use—then turns them into the decisions you should make next.</p>
+        <p className="hero-counter"><b ref={exportsRef}>0</b> exports connected. <b ref={anomaliesRef}>0</b> anomalies surfaced. In the time it takes to read this sentence.</p>
         <div className="hero-actions"><Link href="/dashboard" className="button button-light">View dashboard <span>→</span></Link><button onClick={()=>setDemo(true)} className="text-link hero-demo-link">Request demo ↗</button></div>
       </div>
       <div className="hero-intel-card"><span>ACTIVE INTELLIGENCE</span><b>Margin momentum +18%</b><small>911 mix and F&amp;I penetration are driving the change.</small><Link href="/journeys/anomaly-detection">OPEN SIGNAL →</Link></div>
     </section>
+    <StatsBar />
     <section className="proof-strip"><span>THE MANUAL WAY</span><b>4.5 hours</b><i/><span>WITH GHOST HAND</span><b>2m 34s</b><span className="time-back">TIME, RETURNED.</span></section>
     <section className="feature-section" id="capabilities"><div className="section-kicker">CHOOSE A STORY TO EXPLORE</div><div className="feature-grid feature-links">{features.map(f=><Link href={f.href} key={f.number}><article><div className="feature-top"><span>{f.number}</span><b>{f.metric}</b></div><div className="feature-viz">{f.bars.map((h,i)=><i key={i} style={{height:`${h}%`}}/>)}</div><h2>{f.title}</h2><p>{f.body}</p><strong>EXPLORE JOURNEY →</strong></article></Link>)}</div></section>
     <section className="landing-close"><div><span>DEMO PATH · 8 MINUTES</span><h2>Discovery to decision,<br/>without leaving the room.</h2></div><Link href="/onboarding/step-1" className="button button-light">Start guided setup <span>→</span></Link></section>

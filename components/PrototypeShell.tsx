@@ -21,6 +21,7 @@ export function PrototypeShell({children, title, eyebrow, description, actions}:
     ["/dashboard","Overview","⌁"],["/journeys/anomaly-detection","Anomalies","◇"],["/journeys/executive-reporting","Reports","◫"],
     ["/journeys/cross-dept-clarity","Connections","↔"],["/departments/sales","Sales","↗"],["/departments/service","Service","⌘"],
     ["/departments/parts","Parts","▦"],["/advisors","Advisors","◎"],["/upload","Data imports","⇧"],["/settings","Settings","⚙"],
+    ["/onboarding/step-1","Presentation","▶"],
   ];
   return <main className="proto-app">
     <aside className={`proto-sidebar ${mobile?"open":""}`}>
