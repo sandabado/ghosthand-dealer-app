@@ -27,9 +27,10 @@ export default function Onboarding() {
         <a href="/onboarding/step-1" className="wordmark"><span>GH</span> Ghost Hand Intelligence</a>
         <Link href="/dashboard" className="beat-skip">Skip to demo →</Link>
       </nav>
-      {beat === 1 && <Beat1 onNext={() => go(2)} />}
+      {/* Shortened flow: Arrival -> Connector -> Decision -> Dashboard. Beats 2, 4, 5 stay reachable by direct URL but are skipped here. */}
+      {beat === 1 && <Beat1 onNext={() => go(3)} />}
       {beat === 2 && <Beat2 onNext={() => go(3)} />}
-      {beat === 3 && <Beat3 onNext={() => go(4)} />}
+      {beat === 3 && <Beat3 onNext={() => go(6)} />}
       {beat === 4 && <Beat4 onNext={() => go(5)} />}
       {beat === 5 && <Beat5 onNext={() => go(6)} />}
       {beat === 6 && <Beat6 onNext={() => go(7)} />}
